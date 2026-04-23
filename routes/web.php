@@ -18,3 +18,12 @@ Route::get('/dashboard', [AuthController::class, 'dashboard'])->middleware('auth
 
 // Logout
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+
+// EXTRA FEATURE: Profile
+Route::get('/profile', [AuthController::class, 'profile'])
+    ->middleware('auth')
+    ->name('profile');
+
+Route::post('/profile', [AuthController::class, 'updateProfile'])
+    ->middleware('auth')
+    ->name('profile.update');
