@@ -1,137 +1,183 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <title>Register</title>
+
     <script src="//unpkg.com/alpinejs" defer></script>
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@3.3.2/dist/tailwind.min.css" rel="stylesheet">
+
     <style>
         body {
-            background: linear-gradient(135deg, #89f7fe, #66a6ff);
-            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            font-family: Arial;
             min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
 
+        /* CARD */
         .card {
-            background: #ffffff;
-            border-radius: 1.5rem;
-            margin-left: 500px;
-            margin-top: 40px;
-            padding: 3rem;
-            width: 100%;
-            max-width: 400px;
-            box-shadow: 0 15px 40px rgba(0,0,0,0.2);
+            background: white;
+            border-radius: 20px;
+            padding: 35px;
+            width: 380px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.25);
+            animation: fadeIn 0.4s ease-in-out;
         }
 
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(15px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* TITLE */
+        h2 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        /* INPUT */
         .form-group {
-            margin-bottom: 1.5rem;
+            margin-bottom: 15px;
             display: flex;
             flex-direction: column;
         }
 
-        .form-group label {
-            font-weight: 600;
-            margin-bottom: 0.5rem;
-            color: #374151;
+        label {
+            font-size: 13px;
+            font-weight: bold;
+            margin-bottom: 5px;
+            color: #333;
         }
 
-        .form-group input {
-            padding: 0.85rem 1rem;
-            border-radius: 0.75rem;
+        input {
+            padding: 10px;
+            border-radius: 10px;
             border: 1px solid #ddd;
-            transition: all 0.3s;
-        }
-
-        .form-group input:focus {
             outline: none;
-            border-color: #6366f1;
-            box-shadow: 0 0 0 2px rgba(99,102,241,0.3);
+            transition: 0.3s;
         }
 
-        .toggle-btn {
-            position: absolute;
-            top: 50%;
-            right: 1rem;
-            transform: translateY(-50%);
-            background: none;
-            border: none;
-            font-weight: 600;
-            cursor: pointer;
+        input:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 5px rgba(102, 126, 234, 0.4);
         }
 
+        /* BUTTON */
         button.primary-btn {
             width: 100%;
-            background: linear-gradient(90deg, #6366f1, #8b5cf6);
+            padding: 12px;
+            border: none;
+            border-radius: 12px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
             color: white;
-            font-weight: 600;
-            padding: 0.85rem;
-            border-radius: 0.75rem;
-            transition: all 0.3s;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.3s;
         }
 
         button.primary-btn:hover {
-            opacity: 0.9;
-            transform: translateY(-2px);
-            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            transform: scale(1.03);
         }
 
-        .footer-text a {
-            color: #6366f1;
-            font-weight: 600;
+        /* TOGGLE PASSWORD */
+        .toggle-btn {
+            position: absolute;
+            right: 12px;
+            top: 35px;
+            cursor: pointer;
+            font-size: 12px;
+            color: #667eea;
+        }
+
+        /* RELATIVE WRAPPER */
+        .relative {
+            position: relative;
+        }
+
+        /* LINK */
+        a {
+            color: #667eea;
+            text-decoration: none;
+        }
+
+        a:hover {
             text-decoration: underline;
         }
 
-        .relative-input {
-            position: relative;
+        /* ERROR */
+        .error {
+            color: red;
+            font-size: 12px;
+            margin-top: 4px;
         }
     </style>
 </head>
-<body class="flex items-center justify-center">
 
-<!-- Centered Card -->
-<div class="card" x-data="{ showPassword: false }">
-    <h2 class="text-3xl font-bold text-gray-800 mb-8 text-center">Create Account</h2>
+<body>
 
-    @if(session('success'))
-        <p class="text-green-600 mb-4 font-medium">{{ session('success') }}</p>
-    @endif
+    <div class="card" x-data="{ show: false }">
 
-    <form method="POST" action="{{ route('register.post') }}">
-        @csrf
+        <h2>Create Account</h2>
 
-        <div class="form-group">
-            <label for="name">Name</label>
-            <input type="text" name="name" id="name" value="{{ old('name') }}" placeholder="Enter your name">
-            @error('name') <p class="text-red-500 mt-1 text-sm">{{ $message }}</p> @enderror
-        </div>
+        @if(session('success'))
+        <p style="color:green; text-align:center;">{{ session('success') }}</p>
+        @endif
 
-        <div class="form-group">
-            <label for="email">Email</label>
-            <input type="email" name="email" id="email" value="{{ old('email') }}" placeholder="Enter your email">
-            @error('email') <p class="text-red-500 mt-1 text-sm">{{ $message }}</p> @enderror
-        </div>
+        <form method="POST" action="{{ route('register.post') }}">
+            @csrf
 
-        <div class="form-group relative relative-input">
-            <label for="password">Password</label>
-            <input :type="showPassword ? 'text' : 'password'" name="password" id="password" placeholder="Enter password">
-            <button type="button" class="toggle-btn" @click="showPassword = !showPassword">
-                <span x-text="showPassword ? 'Hide' : 'Show'"></span>
-            </button>
-            @error('password') <p class="text-red-500 mt-1 text-sm">{{ $message }}</p> @enderror
-        </div>
+            <!-- NAME -->
+            <div class="form-group">
+                <label>Name</label>
+                <input type="text" name="name" value="{{ old('name') }}" placeholder="Enter your name">
+                @error('name') <div class="error">{{ $message }}</div> @enderror
+            </div>
 
-        <div class="form-group">
-            <label for="password_confirmation">Confirm Password</label>
-            <input :type="showPassword ? 'text' : 'password'" name="password_confirmation" id="password_confirmation" placeholder="Confirm password">
-        </div>
+            <!-- EMAIL -->
+            <div class="form-group">
+                <label>Email</label>
+                <input type="email" name="email" value="{{ old('email') }}" placeholder="Enter your email">
+                @error('email') <div class="error">{{ $message }}</div> @enderror
+            </div>
 
-        <button type="submit" class="primary-btn mt-2">Register</button>
-    </form>
+            <!-- PASSWORD -->
+            <div class="form-group relative">
+                <label>Password</label>
 
-    <p class="mt-6 text-center text-gray-600 footer-text">
-        Already have an account? <a href="{{ route('login') }}">Login</a>
-    </p>
-</div>
+                <input :type="show ? 'text' : 'password'" name="password" placeholder="Enter password">
+
+                <span class="toggle-btn" @click="show = !show"
+                    x-text="show ? 'Hide' : 'Show'"></span>
+
+                @error('password') <div class="error">{{ $message }}</div> @enderror
+            </div>
+
+            <!-- CONFIRM PASSWORD -->
+            <div class="form-group">
+                <label>Confirm Password</label>
+                <input :type="show ? 'text' : 'password'" name="password_confirmation" placeholder="Confirm password">
+            </div>
+
+            <button type="submit" class="primary-btn">Register</button>
+
+        </form>
+
+        <p style="text-align:center; margin-top:15px;">
+            Already have account? <a href="{{ route('login') }}">Login</a>
+        </p>
+
+    </div>
 
 </body>
+
 </html>

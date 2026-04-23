@@ -1,72 +1,158 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <title>Dashboard</title>
-    <script src="//unpkg.com/alpinejs" defer></script>
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@3.3.2/dist/tailwind.min.css" rel="stylesheet">
+
     <style>
         body {
-            background: linear-gradient(135deg, #89f7fe, #66a6ff);
-            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
 
+        /* MAIN CARD */
         .card {
             background: white;
-            border-radius: 1.5rem;
-            padding: 3rem 2rem;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+            width: 420px;
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.25);
             text-align: center;
-            margin-left: 500px;
-            margin-top: 40px;
-            max-width: 450px;
-            width: 100%;
-            transition: transform 0.3s, box-shadow 0.3s;
+            animation: fadeIn 0.4s ease-in-out;
         }
 
-        .card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 25px 50px rgba(0,0,0,0.25);
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(15px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
-        .btn-logout {
-            width: 100%;
-            padding: 0.85rem;
-            border-radius: 0.75rem;
-            font-weight: 600;
-            background: linear-gradient(90deg, #f43f5e, #e11d48);
+        /* AVATAR */
+        .avatar {
+            width: 70px;
+            height: 70px;
+            margin: auto;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
             color: white;
-            transition: all 0.3s;
+            font-size: 26px;
+            font-weight: bold;
         }
 
-        .btn-logout:hover {
-            opacity: 0.9;
-            transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+        /* TEXT */
+        h2 {
+            margin: 10px 0 5px;
+        }
+
+        p {
+            color: #555;
+            font-size: 14px;
+        }
+
+        /* BUTTONS */
+        .btn {
+            display: block;
+            padding: 12px;
+            margin: 10px 0;
+            border-radius: 12px;
+            text-decoration: none;
+            color: white;
+            font-weight: bold;
+            transition: 0.3s;
+        }
+
+        .btn:hover {
+            transform: scale(1.03);
+        }
+
+        .blue {
+            background: #4f46e5;
+        }
+
+        .green {
+            background: #16a34a;
+        }
+
+        .red {
+            background: #dc2626;
+        }
+
+        /* GRID BOXES */
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 10px;
+            margin: 20px 0;
+        }
+
+        .box {
+            padding: 12px;
+            border-radius: 12px;
+            font-size: 13px;
+            font-weight: bold;
+            color: white;
+        }
+
+        .purple {
+            background: #8b5cf6;
+        }
+
+        .teal {
+            background: #14b8a6;
+        }
+
+        .orange {
+            background: #f59e0b;
         }
     </style>
 </head>
-<body class="flex items-center justify-center min-h-screen">
 
-<!-- Dashboard Card -->
-<div class="card">
-    <h2 class="text-3xl font-extrabold text-gray-800 mb-4">Welcome, {{ auth()->user()->name }}!</h2>
-    <p class="text-gray-600 mb-6">You have successfully logged in. Enjoy your dashboard experience.</p>
+<body>
 
-    <div class="mb-6">
-        <!-- You can add more dashboard content here -->
-        <div class="grid grid-cols-1 gap-4">
-            <div class="bg-indigo-100 p-4 rounded-lg font-medium text-indigo-700">Profile Settings</div>
-            <div class="bg-green-100 p-4 rounded-lg font-medium text-green-700">My Orders</div>
-            <div class="bg-yellow-100 p-4 rounded-lg font-medium text-yellow-700">Notifications</div>
+    <div class="card">
+
+        <!-- AVATAR -->
+        <div class="avatar">
+            {{ strtoupper(substr(auth()->user()->name, 0, 1)) }}
         </div>
+
+        <h2>Welcome, {{ auth()->user()->name }}</h2>
+        <p>You are successfully logged in 🚀</p>
+
+        <!-- INFO BOXES -->
+        <div class="grid">
+            <div class="box purple">Profile Management</div>
+            <div class="box teal">Secure Login System</div>
+            <div class="box orange">Laravel Authentication</div>
+        </div>
+
+        <!-- ACTIONS -->
+        <a href="{{ route('profile') }}" class="btn blue">Edit Profile</a>
+
+        <form method="POST" action="{{ route('logout') }}">
+            @csrf
+            <button class="btn red" style="width:100%; border:none; cursor:pointer;">
+                Logout
+            </button>
+        </form>
+
     </div>
 
-    <form method="POST" action="{{ route('logout') }}">
-        @csrf
-        <button type="submit" class="btn-logout">Logout</button>
-    </form>
-</div>
-
 </body>
+
 </html>
